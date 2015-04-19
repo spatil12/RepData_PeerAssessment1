@@ -1,25 +1,79 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
+title: "PA1_template"
+output: html_document
 ---
+Read the data given in the assignment into activityData, we take into consideration only the complete cases, and discard NA values and store the result in ComplActivity.
+
+Calculate the data frames for part 1 & 2 of the assignments which will help us build the plots.
+
+```{r simulatedata, echo=TRUE}
+activityData <- read.csv("activity.csv")
+library(dplyr)
+library(ggplot2)
+ComplActivity <- activityData[complete.cases(activityData),]
+activity_byday <- group_by(ComplActivity, date)
+
+steps_sum <- summarize(activity_byday, sum(steps))
+colnames(steps_sum) <- c("day", "Total_steps")
+activity_byinterval <- group_by(ComplActivity, interval)
+
+avgSteps <- summarize(activity_byinterval, mean(steps))
+colnames(avgSteps) <- c("interval", "average_steps")
 
 
-## Loading and preprocessing the data
+```
+## Part 1 plot
+Plot a histogram of the total number of steps taken per day and calculate Mean & Median of the total number of steps taken per day.
+
+```{r histogramPlot, fig.height=4, echo = TRUE}
+qplot(Total_steps,data = steps_sum)
+meanSteps <- mean(steps_sum$Total_steps)
+medianSteps <- median(steps_sum$Total_steps)
+
+```
+
+Now we got our mean which is `r meanSteps` and median which is `r medianSteps` of the total number of steps taken per day.
+
+## Part 2 plot
+
+Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis).
+Calculate the  5-minute interval, on average across all the days in the dataset, contains the maximum number of steps.
+
+
+``` {r timePlot, fig.height = 4, echo=TRUE}
+plot(avgSteps$interval,avgSteps$average_steps, typ="l", xlab="5 min interval", ylab = "Average steps")
+max <- avgSteps[which.max(avgSteps$average_steps),]
+MaxInt <- max$interval
+```
+
+The 5 min interval, on the average across all the the days in the dataset, contains the maximum number of steps is `r MaxInt`
+
+## Part 3 
+The na values in the data set have been replaced by 200. 
+
+``` {r part3, echo=TRUE}
+activityData <- read.csv("activity.csv")
+NaValues <- length(which(is.na(activityData$steps)))
+activityData[["steps"]][is.na(activityData[["steps"]])] <- 200
+NewActivityData <- activityData
+NewAct_byday <- group_by(NewActivityData, date)
+NewStepsSum <- summarize(NewAct_byday, sum(steps))
+colnames(NewStepsSum) <- c("day", "Total_steps")
+qplot(Total_steps, data= NewStepsSum)
+NewMeanSteps <- mean(NewStepsSum$Total_steps)
+NewMedianSteps <- median(NewStepsSum$Total_steps)
+
+```
+
+Total number of missing values in the dataset is `r NaValues`. The new mean is `r NewMeanSteps` and new median is `r NewMedianSteps`. Which seem to be very different from the part 1.
+
+## Part 4
+
+```{r part4, echo=TRUE}
+NewActivityData4 <- mutate(NewActivityData, day = weekdays(as.Date(date)))
+
+```
 
 
 
-## What is mean total number of steps taken per day?
 
-
-
-## What is the average daily activity pattern?
-
-
-
-## Imputing missing values
-
-
-
-## Are there differences in activity patterns between weekdays and weekends?
