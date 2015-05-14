@@ -10,6 +10,7 @@ Calculate the data frames for part 1 & 2 of the assignments which will help us b
 activityData <- read.csv("activity.csv")
 library(dplyr)
 library(ggplot2)
+library(timeDate)
 ComplActivity <- activityData[complete.cases(activityData),]
 activity_byday <- group_by(ComplActivity, date)
 
@@ -23,7 +24,8 @@ colnames(avgSteps) <- c("interval", "average_steps")
 
 ```
 ## Part 1 plot
-Plot a histogram of the total number of steps taken per day and calculate Mean & Median of the total number of steps taken per day.
+
+A histogram of the total number of steps taken per day and Mean & Median of the total number of steps taken per day.
 
 ```{r histogramPlot, fig.height=4, echo = TRUE}
 qplot(Total_steps,data = steps_sum)
@@ -49,12 +51,12 @@ MaxInt <- max$interval
 The 5 min interval, on the average across all the the days in the dataset, contains the maximum number of steps is `r MaxInt`
 
 ## Part 3 
-The na values in the data set have been replaced by 200. 
+The na values in the data set have been replaced by median of total number of steps taken per day. 
 
 ``` {r part3, echo=TRUE}
 activityData <- read.csv("activity.csv")
 NaValues <- length(which(is.na(activityData$steps)))
-activityData[["steps"]][is.na(activityData[["steps"]])] <- 200
+activityData[["steps"]][is.na(activityData[["steps"]])] <- median(steps_sum$Total_steps)
 NewActivityData <- activityData
 NewAct_byday <- group_by(NewActivityData, date)
 NewStepsSum <- summarize(NewAct_byday, sum(steps))
@@ -68,9 +70,27 @@ NewMedianSteps <- median(NewStepsSum$Total_steps)
 Total number of missing values in the dataset is `r NaValues`. The new mean is `r NewMeanSteps` and new median is `r NewMedianSteps`. Which seem to be very different from the part 1.
 
 ## Part 4
+First we create a new column day to show the day of the week. Then sort the data based on whether it
+is weekday or weekend. And finally plot the graph for average steps according to the interval. From the plot it's clear the activity is not the same for weekend and weekday.
 
 ```{r part4, echo=TRUE}
-NewActivityData4 <- mutate(NewActivityData, day = weekdays(as.Date(date)))
+NewActivityData4 <- mutate(NewActivityData, day = weekdays(as.Date(date))) 
+NewActivityData4[["day"]][isWeekday(NewActivityData4[["date"]])] <- "Weekday"
+NewActivityData4[["day"]][isWeekend(NewActivityData4[["date"]])] <- "Weekend"
+Act_byWeekend <- NewActivityData4[NewActivityData4$day == "Weekend",]
+Act_byWeekday <- NewActivityData4[NewActivityData4$day == "Weekday",]
+
+WeekendAct_byInt<- group_by(Act_byWeekend, interval)
+WeekdayAct_byInt<- group_by(Act_byWeekday, interval)
+
+AvgSteps_Weekday <- summarize(WeekdayAct_byInt, mean(steps))
+colnames(AvgSteps_Weekday) <- c("Interval", "Average_steps")
+AvgSteps_Weekend <- summarize(WeekendAct_byInt, mean(steps))
+colnames(AvgSteps_Weekend) <- c("Interval", "Average_steps")
+
+par(mfrow= c(2,1))
+plot(AvgSteps_Weekday$Interval, AvgSteps_Weekday$Average_steps, typ="l", xlab="5 min interval", ylab = "Average steps")
+plot(AvgSteps_Weekend$Interval, AvgSteps_Weekend$Average_steps, typ="l", xlab="5 min interval", ylab = "Average steps")
 
 ```
 
