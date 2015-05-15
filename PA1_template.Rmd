@@ -1,6 +1,8 @@
 ---
 title: "PA1_template"
-output: html_document
+output:
+  html_document:
+    keep_md: yes
 ---
 Read the data given in the assignment into activityData, we take into consideration only the complete cases, and discard NA values and store the result in ComplActivity.
 
@@ -53,7 +55,7 @@ The 5 min interval, on the average across all the the days in the dataset, conta
 ## Part 3 
 The na values in the data set have been replaced by median of total number of steps taken per day. 
 
-``` {r part3, echo=TRUE}
+``` {r part3,fig.height = 4, echo=TRUE}
 activityData <- read.csv("activity.csv")
 NaValues <- length(which(is.na(activityData$steps)))
 activityData[["steps"]][is.na(activityData[["steps"]])] <- median(steps_sum$Total_steps)
@@ -73,7 +75,7 @@ Total number of missing values in the dataset is `r NaValues`. The new mean is `
 First we create a new column day to show the day of the week. Then sort the data based on whether it
 is weekday or weekend. And finally plot the graph for average steps according to the interval. From the plot it's clear the activity is not the same for weekend and weekday.
 
-```{r part4, echo=TRUE}
+```{r part4, fig.height = 8, echo=TRUE}
 NewActivityData4 <- mutate(NewActivityData, day = weekdays(as.Date(date))) 
 NewActivityData4[["day"]][isWeekday(NewActivityData4[["date"]])] <- "Weekday"
 NewActivityData4[["day"]][isWeekend(NewActivityData4[["date"]])] <- "Weekend"
