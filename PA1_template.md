@@ -54,7 +54,7 @@ qplot(Total_steps,data = steps_sum)
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![](PA1_template_files/figure-html/histogramPlot-1.png) 
+[](PA1_template_files/figure-html/histogramPlot-1.png) 
 
 Now we got our mean which is 1.0766189\times 10^{4} and median which is 10765 of the total number of steps taken per day.
 
@@ -69,7 +69,7 @@ Calculate the  5-minute interval, on average across all the days in the dataset,
 plot(avgSteps$interval,avgSteps$average_steps, typ="l", xlab="5 min interval", ylab = "Average steps")
 ```
 
-![](PA1_template_files/figure-html/timePlot-1.png) 
+[](PA1_template_files/figure-html/timePlot-1.png) 
 
 The 5 min interval, on the average across all the the days in the dataset, contains the maximum number of steps is 835
 
@@ -100,7 +100,7 @@ qplot(Total_steps, data= NewStepsSum)
 ## stat_bin: binwidth defaulted to range/30. Use 'binwidth = x' to adjust this.
 ```
 
-![](PA1_template_files/figure-html/part3_plot-1.png) 
+[](PA1_template_files/figure-html/part3_plot-1.png) 
 ## Part 4
 First we create a new column day to show the day of the week. Then sort the data based on whether it
 is weekday or weekend. And finally plot the graph for average steps according to the interval. From the plot it's clear the activity is not the same for weekend and weekday.
@@ -129,6 +129,6 @@ plot(AvgSteps_Weekday$Interval, AvgSteps_Weekday$Average_steps, typ="l", xlab="5
 plot(AvgSteps_Weekend$Interval, AvgSteps_Weekend$Average_steps, typ="l", xlab="5 min interval", ylab = "Average steps")
 ```
 
-![](PA1_template_files/figure-html/part4_plot-1.png) 
+[](PA1_template_files/figure-html/part4_plot-1.png) 
 
 
